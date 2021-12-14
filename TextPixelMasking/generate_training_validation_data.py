@@ -5,16 +5,13 @@
 
 
 from typing import Dict, List, Optional, Sequence, Text, Tuple, Union
-from cv2 import batchDistance
 
 import keras
-import os.path
-
 import numpy as np
 
 import image_with_text_functions
 
-class TextMaskImageDataGenerator(keras.utils.Sequence):
+class TextMaskImageDataGenerator(Sequence):
     """Generates batches of images with Text with associated pixel masks (class labels) on the fly.
     To be passed as argument in the fit_generator function of Keras.
     Parameters
@@ -32,6 +29,7 @@ class TextMaskImageDataGenerator(keras.utils.Sequence):
         List of enzymes to generate.
     shuffle : boolean (optional, default is True)
         If True, shuffles order of exploration.
+
 
     """
     def __init__(
@@ -52,9 +50,12 @@ class TextMaskImageDataGenerator(keras.utils.Sequence):
         self.shuffle = shuffle
         self.on_epoch_end()
 
+
+
+
     def on_epoch_end(self) -> None:
         """Updates indexes after each epoch."""
-        self.indexes = np.arange(len(self.list_image_paths))
+        self.indexes = np.arange(len(self.list_image_paths), dtype=np.int)
         if self.shuffle is True:
             np.random.shuffle(self.indexes)
 
@@ -80,22 +81,41 @@ class TextMaskImageDataGenerator(keras.utils.Sequence):
             list_image_ids_temp: List[np.array]
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Returns images with text and pixel masks ."""  # X : (batch_size, x_size, y_size, n_channels).
-        # Initialization.
+
         X = np.empty((self.batch_size,  # batch_size.
                       self.x_size,  # dimension w.r.t. x.
                       self.y_size,  # dimension w.r.t. y.
-                      self.n_channels))  # n_channels.
+                      self.n_channels), dtype=np.uint8)  # n_channels.
         y = np.empty((self.batch_size,  # batch_size.
                       self.x_size,  # dimension w.r.t. x.
                       self.y_size,  # dimension w.r.t. y.
-                      self.n_channels))  # n_channels.
+                      self.n_channels), dtype=np.uint8)  # n_channels.
 
-        # Computations.
-        i=0
-        while i < self.batch_size:
-            imgs, masks = image_with_text_functions.generate_text_on_image_and_pixel_mask_from_path(list_image_ids_temp[i], self.x_size, self.y_size, self.n_channels)
-            num_crops = min(imgs.shape[0], num_crops)
-            X[i:i+num_crops] = imgs[:num_crops]
-            y[i:i+num_crops] = masks[:num_crops]
+        image_index=0
+        batch_index=0
+        while batch_index < self.batch_size:
+            print("__data_gen, ", list_image_ids_temp[image_index])
+            imgs, masks = image_with_text_functions.generate_crops_of_text_on_image_and_pixel_mask_from_path(list_image_ids_temp[image_index], self.x_size, self.y_size, self.n_channels)
+            num_crops = min(len(imgs), self.batch_size-batch_index)
+            if num_crops >0:
+                # __log_("__data_generation.X",str(X[image_index:image_index+num_crops].shape))
+                # __log_("__data_generation.imgs[:num_crops]",str(np.asarray(imgs[:num_crops]).shape))
+                # print("o,gs", np.asarray(imgs[:num_crops]).shape)
 
+                X[batch_index:batch_index+num_crops, 0:self.x_size, 0:self.y_size, 0:self.n_channels] = np.asarray(imgs[:num_crops])                
+                y[batch_index:batch_index+num_crops, 0:self.x_size, 0:self.y_size, 0:self.n_channels] = np.asarray(masks[:num_crops])
+                # makss = masks[:num_crops]
+                # import cv2 as cv
+                # for i in range(len(makss)):
+                #     cv.imshow('makss'+str(i),makss[i])
+                # for i in range(num_crops):
+                #     cv.imshow('makss'+str(i), y[batch_index+i])
+                # cv.waitKey(0)
+
+                image_index+=num_crops
+                batch_index+=num_crops
+
+            image_index+=1
+
+        print("data generated shapes", X.shape, y.shape)
         return X, y

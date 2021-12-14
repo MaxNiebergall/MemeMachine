@@ -7,6 +7,13 @@ PRINTABLE_ARRAY = list(string.printable)
 rng = np.random.default_rng(seed=1)
 FONTS = (cv.FONT_HERSHEY_SIMPLEX, cv.FONT_HERSHEY_PLAIN, cv.FONT_HERSHEY_DUPLEX, cv.FONT_HERSHEY_COMPLEX, cv.FONT_HERSHEY_TRIPLEX, cv.FONT_HERSHEY_COMPLEX_SMALL, cv.FONT_ITALIC)
 
+# just for debugging this file
+def __log_(identifier, message):
+    debug=False
+    if (debug == True):
+        module_name = "image_with_text_functions"
+        print(module_name+"."+identifier, ":", message)
+
 
 def put_random_text(img):
     font = FONTS[int(rng.integers(0, len(FONTS), 1))] #randomly select a font from the FONTS tuple
@@ -51,32 +58,67 @@ def mask_image(img, topLeftCornerOfText, width, height, baseline, useGaussianNoi
 
     return masked_image, mask
 
+def put_text_and_mask_image_text_pixels_only(img, x_size, y_size):
+    #def put_random_text(img):
+    font = FONTS[int(rng.integers(0, len(FONTS), 1))] #randomly select a font from the FONTS tuple
+    topLeftCornerOfText = (int(rng.integers(0, img.shape[1], 1)), int(rng.integers(0, img.shape[0], 1))) #randomly select a place on the image
+    fontScale = (100/rng.integers(low=50, high=200)) #randomly select a scale for the text
+    fontColor = (255*(rng.random()**3),255*(rng.random()**3),255*(rng.random()**3)) #randomly select a color, weighted towards darker colors by cubing the random number [0,1] //TODO change these values to be more realistic
+    text = ''.join(rng.choice(PRINTABLE_ARRAY, size=rng.integers(1,50,1), shuffle=False)) #randomly create a string of printable characters, between 1 and 50 characters in length
+    thickness = rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
+
+    cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
+
+    mask = np.zeros(img.shape, np.uint8)
+    cv.putText(mask, text, topLeftCornerOfText, font, fontScale, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
+
+    return img, mask
 
 def put_text_mask_image(img, useGaussianNoise=False):
     img, topLeftCornerOfText, width, height, baseline = put_random_text(img)
     masked_image, mask = mask_image(img, topLeftCornerOfText, width, height, baseline, useGaussianNoise)
     return masked_image, mask
 
-
+#TODO scale images instead of just doing random crops
 def generate_crops_of_text_on_image_and_pixel_mask_from_path(path, x_size, y_size, n_channels):
-    assert n_channels == 3, "Only n_channels == 3 supported"
 
-    raw_img = cv.imread(path, flags=cv.IMREAD_COLOR) #TODO change this for ALPHA channel support
-    text_img, topLeftCornerOfText, width, height, baseline = put_random_text(raw_img)
-    _ , mask = mask_image(img, topLeftCornerOfText, width, height, baseline)
+    assert n_channels == 3, "Only n_channels == 3 supported"
 
     imgs = []
     masks = []
-    print("raw_img.size:", raw_img.shape)
-    num_x_crops = math.ceil(raw_img.shape[0]/x_size)
-    num_y_crops = math.ceil(raw_img.shape[1]/y_size)
+    raw_img = None
+    __log_("path", path)
+    if type(path)==type(""):
+        raw_img = cv.imread(path, flags=cv.IMREAD_COLOR) #TODO change this for ALPHA channel support
+        # __log_("raw_image", raw_img)
+    else:
+        print("path not string, but is", type(path))
 
-    for xi in num_x_crops:
-        for yi in num_y_crops:
-            img_crop = text_img[yi*y_size: yi*y_size + y_size, xi*x_size: xi*x_size + x_size]
-            mask_crop = mask[yi*y_size: yi*y_size + y_size, xi*x_size: xi*x_size + x_size]
-            imgs.append(img_crop)
-            masks.append(mask_crop)
+    if(raw_img is not None):
+        text_img, mask = put_text_and_mask_image_text_pixels_only(raw_img, x_size, y_size)
+
+        # cv.imshow('img',text_img)
+        # cv.imshow('mask',mask)
+
+        num_x_crops = math.ceil(raw_img.shape[0]/x_size)
+        num_y_crops = math.ceil(raw_img.shape[1]/y_size)
+        __log_("num crops", num_x_crops*num_y_crops)
+
+        for xi in range(num_x_crops):
+            for yi in range(num_y_crops):
+                mask_crop_temp = mask[xi*x_size : (xi+1)*x_size, yi*y_size : (yi+1)*y_size, :]
+                appendThis = True
+                if not np.any(mask_crop_temp): # then all pixels are zero
+                    # print("np.any(mask_crop_temp)", np.any(mask_crop_temp))
+                    appendThis = np.random.choice(a=[False, True], p=[0.9, 0.1]) # 10% chance to include blank crop
+                    # print("appendThis", appendThis)
+                if appendThis:
+                    text_img_crop_temp = text_img[xi*x_size : (xi+1)*x_size, yi*y_size : (yi+1)*y_size, :]           
+                    imgs.append(np.pad(text_img_crop_temp, ((0,x_size-text_img_crop_temp.shape[0]), (0,y_size-text_img_crop_temp.shape[1]), (0,0)), 'constant', constant_values=(0)))
+                    masks.append(np.pad(mask_crop_temp, ((0,x_size-mask_crop_temp.shape[0]), (0,y_size-mask_crop_temp.shape[1]), (0,0)), 'constant', constant_values=(0)))
+                    # cv.imshow('img_crop', imgs[-1])
+                    # cv.imshow('mask_crop', masks[-1])
+                    # cv.waitKey(0)
 
     return imgs, masks
 
@@ -113,4 +155,13 @@ if __name__ == "__main__":
             cv.imshow('mask',mask)
 
             cv.waitKey(0)
+
+            print("test generate_crops_of_text_on_image_and_pixel_mask_from_path(file_path, 256, 256, 3)")
+            imgs, masks = generate_crops_of_text_on_image_and_pixel_mask_from_path(file_path, 64, 64, 3)
+            for i in range(len(imgs)):
+                cv.imshow('imgs'+str(i),imgs[i])
+            for i in range(len(masks)):
+                cv.imshow('masks'+str(i),masks[i])
+            cv.waitKey(0)
+
 

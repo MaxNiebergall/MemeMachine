@@ -1,1 +1,3 @@
 TextPixelMasking/textPixelMaskingVenv/*
+TextPixelMasking/__pycache__/generate_training_validation_data.cpython-36.pyc
+TextPixelMasking/__pycache__/image_with_text_functions.cpython-36.pyc
