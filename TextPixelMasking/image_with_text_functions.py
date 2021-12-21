@@ -149,13 +149,12 @@ def generate_text_on_image_and_pixel_mask_from_path(path, x_size, y_size, n_chan
 
         #TODO make sure that the text gets placed on the image properly
         text_img, mask = put_text_and_mask_image_text_pixels_only(raw_img_crop)
-       
-        mask = mask[:,:,0]
-        # cv.imshow('img_crop', imgs[-1])
-        # cv.imshow('mask_crop', masks[-1])
-        # cv.waitKey(0)
 
-    return text_img, mask
+        # remap the mask from a color image to a 2-d vector with values 0,1.
+        mask = mask[:,:,0]
+        mask[mask==255] = 1
+
+        return text_img, mask
 
 def get_random_crop(image, crop_height, crop_width):
 
