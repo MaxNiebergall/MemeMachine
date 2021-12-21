@@ -58,28 +58,11 @@ def mask_image(img, topLeftCornerOfText, width, height, baseline, useGaussianNoi
 
     return masked_image, mask
 
-def put_text_and_mask_image_text_pixels_only(img, x_size, y_size):
-    #def put_random_text(img):
-    font = FONTS[int(rng.integers(0, len(FONTS), 1))] #randomly select a font from the FONTS tuple
-    topLeftCornerOfText = (int(rng.integers(0, img.shape[1], 1)), int(rng.integers(0, img.shape[0], 1))) #randomly select a place on the image
-    fontScale = (100/rng.integers(low=50, high=200)) #randomly select a scale for the text
-    fontColor = (255*(rng.random()**3),255*(rng.random()**3),255*(rng.random()**3)) #randomly select a color, weighted towards darker colors by cubing the random number [0,1] //TODO change these values to be more realistic
-    text = ''.join(rng.choice(PRINTABLE_ARRAY, size=rng.integers(1,50,1), shuffle=False)) #randomly create a string of printable characters, between 1 and 50 characters in length
-    thickness = rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
-
-    cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
-
-    mask = np.zeros(img.shape, np.uint8)
-    cv.putText(mask, text, topLeftCornerOfText, font, fontScale, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
-
-    return img, mask
-
 def put_text_mask_image(img, useGaussianNoise=False):
     img, topLeftCornerOfText, width, height, baseline = put_random_text(img)
     masked_image, mask = mask_image(img, topLeftCornerOfText, width, height, baseline, useGaussianNoise)
     return masked_image, mask
 
-#TODO scale images instead of just doing random crops
 def generate_crops_of_text_on_image_and_pixel_mask_from_path(path, x_size, y_size, n_channels):
 
     assert n_channels == 3, "Only n_channels == 3 supported"
@@ -121,6 +104,58 @@ def generate_crops_of_text_on_image_and_pixel_mask_from_path(path, x_size, y_siz
                     # cv.waitKey(0)
 
     return imgs, masks
+
+def put_text_and_mask_image_text_pixels_only(img):
+    #def put_random_text(img):
+    font = FONTS[int(rng.integers(0, len(FONTS), 1))] #randomly select a font from the FONTS tuple
+    topLeftCornerOfText = (int(rng.integers(0, img.shape[0]*0.5, 1)), int(rng.integers(20, img.shape[1], 1))) #randomly select a place on the image
+    fontScale = 1 #(100/rng.integers(low=50, high=300)) #randomly select a scale for the text
+    fontColor = (255*(rng.random()**3),255*(rng.random()**3),255*(rng.random()**3)) #randomly select a color, weighted towards darker colors by cubing the random number [0,1] //TODO change these values to be more realistic
+    text = ''.join(rng.choice(PRINTABLE_ARRAY, size=rng.integers(1,50,1), shuffle=False)) #randomly create a string of printable characters, between 1 and 50 characters in length
+    thickness = rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
+
+    cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
+
+    mask = np.zeros(img.shape, np.uint8)
+    cv.putText(mask, text, topLeftCornerOfText, font, fontScale, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
+
+    return img, mask
+
+#generate random crop of image then put text and mask
+def generate_text_on_image_and_pixel_mask_from_path(path, x_size, y_size, n_channels):
+
+    assert n_channels == 3, "Only n_channels == 3 supported"
+
+    raw_img = None
+    __log_("path", path)
+    if type(path)==type(""):
+        raw_img = cv.imread(path, flags=cv.IMREAD_COLOR) #TODO change this for ALPHA channel support
+        # __log_("raw_image", raw_img)
+    else:
+        print("path not string, but is", type(path))
+
+    if(raw_img is not None):
+        # cv.imshow('img',text_img)
+        # cv.imshow('mask',mask)
+
+        num_x_crops = math.ceil(raw_img.shape[0]/x_size)
+        num_y_crops = math.ceil(raw_img.shape[1]/y_size)
+        __log_("num crops", num_x_crops*num_y_crops)
+        xi = int(rng.integers(0, num_x_crops, size=1))
+        yi = int(rng.integers(0, num_y_crops, size=1))
+
+        raw_img_crop = raw_img[xi*x_size : (xi+1)*x_size, yi*y_size : (yi+1)*y_size, :]    
+        raw_img_crop = np.pad(raw_img_crop, ((0,x_size-raw_img_crop.shape[0]), (0,y_size-raw_img_crop.shape[1]), (0,0)), 'constant', constant_values=(0))
+
+        #TODO make sure that the text gets placed on the image properly
+        text_img, mask = put_text_and_mask_image_text_pixels_only(raw_img_crop)
+       
+        mask = mask[:,:,0]
+        # cv.imshow('img_crop', imgs[-1])
+        # cv.imshow('mask_crop', masks[-1])
+        # cv.waitKey(0)
+
+    return text_img, mask
 
 def get_random_crop(image, crop_height, crop_width):
 
