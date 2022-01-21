@@ -1,0 +1,86 @@
+[33mcommit dc10ab1ea04d4bf0007f3ed6f9a3b6f679b9e2a6[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Wed Dec 22 10:31:00 2021 -0500
+
+    little success - 36epoch_constant_TEST
+
+[33mcommit 709351bcc39107faa7bd7743bc44e0445ede0153[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 22:33:13 2021 -0500
+
+    minor improvement, still useless - 10 epochs
+
+[33mcommit e217cea062f025b35c08e0c714a2ccbcc883c242[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 17:28:34 2021 -0500
+
+    predicts all black - L1Loss with reduction='sum'
+
+[33mcommit f2a00c30a48e792eef3c127fc143c0a45699abf1[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 17:02:05 2021 -0500
+
+    no improvement - changed final linear layer to sigmoid
+
+[33mcommit f5e323049e1a00c14f6bda4ea04e3b692579c949[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 16:12:08 2021 -0500
+
+    no improvement - changed mask to values 0,1 (from 0, 255)
+
+[33mcommit f1ccdcc1df01a570da2b638992f87ddfe897b167[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 15:57:49 2021 -0500
+
+    no improvement - changed MSE loss to L1 loss
+
+[33mcommit ec727d9780da33dfb90ae7e504555cee8a5a6f4b[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 21 15:42:02 2021 -0500
+
+    first test with PyTorch
+
+[33mcommit 76589f3f02e9847cd38c1091ab9432b777d18aa7[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Thu Dec 16 11:04:16 2021 -0500
+
+    pivot to PyTorch
+
+[33mcommit 971b04cd45f0e9edc77e29a9bb1090fee362898e[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Tue Dec 14 15:30:38 2021 -0500
+
+    fixes for bugs data generator, image_with_text functions_ and text_pixel masking. text_pixel_masking is now throwing unknown TF errors
+
+[33mcommit 18aa97209f97a188704526b019865023058801f7[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Thu Dec 9 19:22:39 2021 -0500
+
+    Delete TextPixelMasking/venv directory
+
+[33mcommit 176c16c4e881c94429ee4f462a5395fa6cc63f15[m
+Merge: 6709cc51 076f9f6c
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Thu Dec 9 19:18:31 2021 -0500
+
+    Merge pull request #1 from MaxNiebergall/HEAD
+    
+    added data generation
+
+[33mcommit 076f9f6c5d5108b52280b0f0a207b010f3338e16[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Thu Dec 9 19:07:58 2021 -0500
+
+    added data generation
+
+[33mcommit 6709cc51ecd6db86a1dc74cb5da55a551edd34b7[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Thu Dec 9 13:59:36 2021 -0500
+
+    Initial Commit with venv
+
+[33mcommit fca03e7efcb8d408f9707b5ec780d2b75e54a195[m
+Author: Max Niebergall <max@maxniebergall.com>
+Date:   Wed Dec 1 08:36:22 2021 -0500
+
+    Initial commit
