@@ -112,7 +112,7 @@ def put_text_and_mask_image_text_pixels_only(img):
     fontScale = 1 #(100/rng.integers(low=50, high=300)) #randomly select a scale for the text
     fontColor = (255*(1-rng.random()**10),255*(1-rng.random()**10),255*(1-rng.random()**10)) #randomly select a color, weighted towards darker colors by cubing the random number [0,1] //TODO change these values to be more realistic
     text = ''.join(rng.choice(PRINTABLE_ARRAY, size=rng.integers(1,50,1), shuffle=False)) #randomly create a string of printable characters, between 1 and 50 characters in length
-    thickness = rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
+    thickness = 3 #rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
 
     cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
 
