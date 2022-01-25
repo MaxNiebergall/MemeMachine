@@ -8,7 +8,7 @@ import numpy as np
 
 class CustomImageDataset(Dataset):
     #Transform options: 'random_crop', TBA 'detect-resize'
-    def __init__(self, img_dir, x_size, y_size, n_channels=3, transform=None, target_transform=None):
+    def __init__(self, img_dir, x_size, y_size, n_channels=3, transform=None, RNGseed=None, target_transform=None):
         self.x_size = x_size
         self.y_size = y_size
         self.n_channels = n_channels
@@ -16,15 +16,16 @@ class CustomImageDataset(Dataset):
         self.transform = transform 
         self.target_transform = target_transform
         self.img_paths = []
+        self.RNGseed = RNGseed
         for file_ in  os.listdir(img_dir+"/"):
             self.img_paths.append(str(img_dir+"/"+file_))
 
     def __len__(self):
         return len(self.img_paths)
-
+ 
     def __getitem__(self, idx):
         img_path = self.img_paths[idx]
-        text_img, mask = generate_text_on_image_and_pixel_mask_from_path(img_path, self.x_size, self.y_size, self.n_channels)
+        text_img, mask = generate_text_on_image_and_pixel_mask_from_path(img_path, self.x_size, self.y_size, self.n_channels, RNGseed=self.RNGseed)
 
         image = ToTensor()(text_img)
         label_image = ToTensor()(mask)
