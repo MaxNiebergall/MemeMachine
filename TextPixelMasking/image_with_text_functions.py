@@ -113,15 +113,15 @@ def put_text_and_mask_image_text_pixels_only(img, local_rng=None):
     #def put_random_text(img):
     font = FONTS[int(local_rng.integers(0, len(FONTS), 1))] #randomly select a font from the FONTS tuple
     topLeftCornerOfText = (int(local_rng.integers(0, img.shape[0]*0.5, 1)), int(local_rng.integers(20, img.shape[1], 1))) #randomly select a place on the image
-    fontScale = 1 #(100/rng.integers(low=50, high=300)) #randomly select a scale for the text
+    fontScale = 5 #(100/rng.integers(low=50, high=300)) #randomly select a scale for the text
     fontColor = (255*(1-local_rng.random()**10),255*(1-local_rng.random()**10),255*(1-local_rng.random()**10)) #randomly select a color, weighted towards darker colors by cubing the random number [0,1] //TODO change these values to be more realistic
     text = ''.join(local_rng.choice(PRINTABLE_ARRAY, size=local_rng.integers(1,50,1), shuffle=False)) #randomly create a string of printable characters, between 1 and 50 characters in length
-    thickness = 3 #local_rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
+    thickness = 5 #local_rng.integers(max(1, int(fontScale/2)),max(int(fontScale),2))
 
     cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
 
     mask = np.zeros(img.shape, np.uint8)
-    cv.putText(mask, text, topLeftCornerOfText, font, fontScale, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
+    cv.putText(mask, text, topLeftCornerOfText, font, fontScale+1, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
 
     return img, mask
 
