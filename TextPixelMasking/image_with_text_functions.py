@@ -121,7 +121,7 @@ def put_text_and_mask_image_text_pixels_only(img, local_rng=None):
     cv.putText(img, text, topLeftCornerOfText, font, fontScale, fontColor, thickness, bottomLeftOrigin=False)
 
     mask = np.zeros(img.shape, np.uint8)
-    cv.putText(mask, text, topLeftCornerOfText, font, fontScale+1, (255,255,255), thickness, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
+    cv.putText(mask, text, topLeftCornerOfText, font, fontScale, (255,255,255), thickness+2, bottomLeftOrigin=False) # put white text on black background to act as pixel mask
 
     return img, mask
 
