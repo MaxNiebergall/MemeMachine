@@ -1,5 +1,4 @@
-// import logo from './logo.svg';
-import logo from "./minified__rememer_logo_blueToPink_MemeText.svg"
+import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -8,8 +7,9 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Coming SOON
+          Coming soon! 
         </p>
+
       </header>
     </div>
   );
