@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="6in" height="1in" version="1.1" viewBox="0 0 152.39999 25.4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient id="a" x1="121.86" x2="151.01" y1="21.572" y2="12.897" gradientUnits="userSpaceOnUse">
+<stop stop-color="#9cc2e5" offset="0"/>
+<stop stop-color="#ff2ad4" offset="1"/>
+</linearGradient>
+</defs>
+<text transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" style="line-height:1.25;shape-inside:url(#rect14474);white-space:pre" xml:space="preserve"/>
+<text transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" style="line-height:1.25;shape-inside:url(#rect16572);white-space:pre" xml:space="preserve"/>
+<text transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" style="line-height:1.25;shape-inside:url(#rect22110);white-space:pre" xml:space="preserve"/>
+<text transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" style="line-height:1.25;shape-inside:url(#rect52203);white-space:pre" xml:space="preserve"/>
+<text transform="scale(.26458)" fill="#000000" font-family="sans-serif" font-size="40px" style="line-height:1.25;shape-inside:url(#rect53859);white-space:pre" xml:space="preserve"/>
+<text x="12.313031" y="23.370283" fill="url(#a)" font-family="Impact" font-size="25.4px" font-style="italic" font-weight="400" letter-spacing="0px" stroke-miterlimit="8" stroke-width=".265" word-spacing="0px" style="line-height:125%" xml:space="preserve"><tspan x="12.313031" y="23.370283" fill="url(#a)" stroke-miterlimit="8" stroke-width=".265"><tspan dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2" dy="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" font-family="Impact" font-size="25.4px" font-style="italic" font-weight="400" stroke-miterlimit="8" stroke-width=".265">    re             <tspan fill="url(#a)" letter-spacing="-2.6458px">r</tspan><tspan dx="0" fill="url(#a)" font-family="'Arial Rounded MT Bold'" font-style="italic" font-weight="normal" letter-spacing="0px">.</tspan><tspan dx="-2" fill="url(#a)" font-size="26.458px" letter-spacing="0px">AI</tspan> </tspan></tspan></text>
+<path d="m4.2213 18.648 24.507-0.21172" fill="none" stroke="#4472c4" stroke-miterlimit="8" stroke-width=".17732px"/>
+<path d="m1.2151 22.586 24.507-0.21172" fill="none" stroke="#4472c4" stroke-miterlimit="8" stroke-width=".17732px"/>
+<path d="m7.2699 14.54 24.507-0.21172" fill="none" stroke="#4472c4" stroke-miterlimit="8" stroke-width=".17732px"/>
+<text x="52.542618" y="22.963917" fill="#1016f8" font-family="Impact" font-size="25.4px" stroke="#000000" stroke-width=".765" style="line-height:1.25" xml:space="preserve"><tspan x="52.542618" y="22.963917" fill="#1016f8" font-family="Impact" font-size="25.4px" font-style="italic" stroke="none" stroke-width=".765" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal">MEME</tspan></text>
+</svg>
