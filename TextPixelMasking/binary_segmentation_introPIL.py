@@ -59,28 +59,13 @@ from generate_training_validation_data import PILImageDataset
 # init train, val, test sets
 train_data_dir = 'D:/MemeMachine_ProjectData/dataset/training'
 validation_data_dir = 'D:/MemeMachine_ProjectData/dataset/validation'
-img_width, img_height, n_channels = 800, 800, 3 #TODO change dimensions to be wider, to better support text
+img_width, img_height, n_channels = 320, 320, 3 #TODO change dimensions to be wider, to better support text
 batch_size = 9
 
 arch = "FPN"
-encoder_name= "resnet34"
+encoder_name= "resnet152"
 in_channels=3
 out_classes = 1
-
-preprocess_input = get_preprocessing_fn(encoder_name, pretrained='imagenet')
-
-
-train_dataset = PILImageDataset(train_data_dir, img_width, img_height, transform=preprocess_input)
-valid_dataset = PILImageDataset(validation_data_dir, img_width, img_height, transform=preprocess_input)
-
-# It is a good practice to check datasets don`t intersects with each other
-# assert set(test_dataset.filenames).isdisjoint(set(train_dataset.filenames))
-# assert set(test_dataset.filenames).isdisjoint(set(valid_dataset.filenames))
-# assert set(train_dataset.filenames).isdisjoint(set(valid_dataset.filenames))
-
-print(f"Train size: {len(train_dataset)}")
-print(f"Valid size: {len(valid_dataset)}")
-# print(f"Test size: {len(test_dataset)}")
 
 class PetModel(pl.LightningModule):
 
@@ -204,11 +189,24 @@ class PetModel(pl.LightningModule):
             return torch.optim.Adam(self.parameters(), lr=0.0001)
 
 if __name__ == '__main__':
+    
+    preprocess_input = get_preprocessing_fn(encoder_name, pretrained='imagenet')
 
-    # n_cpu = os.cpu_count()
+
+    train_dataset = PILImageDataset(train_data_dir, img_width, img_height, transform=preprocess_input)
+    valid_dataset = PILImageDataset(validation_data_dir, img_width, img_height, transform=preprocess_input)
+
+    # It is a good practice to check datasets don`t intersects with each other
+    # assert set(test_dataset.filenames).isdisjoint(set(train_dataset.filenames))
+    # assert set(test_dataset.filenames).isdisjoint(set(valid_dataset.filenames))
+    # assert set(train_dataset.filenames).isdisjoint(set(valid_dataset.filenames))
+
+    print(f"Train size: {len(train_dataset)}")
+    print(f"Valid size: {len(valid_dataset)}")
+    # print(f"Test size: {len(test_dataset)}")
+
     train_dataloader = FastDataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, persistent_workers =True, prefetch_factor=6)
     valid_dataloader = FastDataLoader(valid_dataset, batch_size=batch_size, shuffle=False, num_workers=4, persistent_workers =True, prefetch_factor=5)
-    # test_dataloader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=n_cpu)
 
     model = PetModel(arch, encoder_name=encoder_name, in_channels=in_channels, out_classes=out_classes)
     ckpt_path=r"C:\Users\maxan\Documents\Programming\MemeMachine\MemeMachine\TextPixelMasking\model_saves\binary_segmentation_intro\binary-segmentation_introPIL-arch=0-encoder_name=0-epoch=04-valid_dataset_iou=0.824615.ckpt"
@@ -218,14 +216,12 @@ if __name__ == '__main__':
     except Exception as e:
         print("no model found at path:", ckpt_path)
         print(e)
-    # %% [markdown]
-    # ## Training
 
-    # %%
+
     checkpoint_callback = ModelCheckpoint(
         monitor='valid_dataset_iou',
         dirpath='model_saves/binary_segmentation_intro/',
-        filename='binary-segmentation_introPIL-{arch:g}-{encoder_name:g}-{epoch:02d}-{valid_dataset_iou:.6f}',
+        filename='binary-segmentation_introPIL-'+arch+'-'+encoder_name+'-{valid_dataset_iou:.6f}',
         mode='max',
         save_top_k=3
         )
